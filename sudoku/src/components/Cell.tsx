@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 
-export interface CellProps {
+export interface BaseCellProps {
     rowIndex: number;
     columnIndex: number;
     value: number;
+}
+
+export interface CellProps extends BaseCellProps {
     disabled: boolean;
     isValid: boolean;
-    onValueChange: (rowIndex: number, columnIndex: number, value: number) => void
+    onValueChange: (value: number) => void;
+    onFocus: (cellProps: BaseCellProps) => void;
 }
 
 export default function Cell(props: CellProps) {
@@ -20,16 +24,20 @@ export default function Cell(props: CellProps) {
 
     function onNumberTextChange(event: React.ChangeEvent<HTMLInputElement>, rowIndex: number, columnIndex: number) {
         console.log(`event target value: ${event.target.value}`);
-            setNumberText(event.target.value);
+        setNumberText(event.target.value);
         if (validKeys.some(k => event.target.value === k) && props.onValueChange) {
             event.preventDefault();
             event.stopPropagation();
             if (props.onValueChange) {
                 const value = parseInt(event.target.value);
                 console.log(`value to pass: ${value}`);
-                props.onValueChange(rowIndex, columnIndex, value);
+                props.onValueChange(value);
             }
         }
+    }
+
+    function onFocusEvent(event: React.FocusEvent<HTMLInputElement>) {
+        props.onFocus({ rowIndex: props.rowIndex, columnIndex: props.columnIndex, value: props.value });
     }
 
     return (
@@ -37,6 +45,7 @@ export default function Cell(props: CellProps) {
             className={getClassName()}
             value={numberText}
             onChange={e => onNumberTextChange(e, props.rowIndex, props.columnIndex)}
-        maxLength={1}></input>
+            maxLength={1}
+            onFocus={onFocusEvent}></input>
     )
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
