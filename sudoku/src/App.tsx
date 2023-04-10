@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import './App.css';
-import Cell, { CellProps } from './components/Cell';
-import {getCellProps, validInColumn, validInRow, validInSquare} from './helpers/helper'
+import Cell, { BaseCellProps, CellProps } from './components/Cell';
+import { getCellProps, validInColumn, validInRow, validInSquare } from './helpers/helper'
 
 function App() {
+
+  function setCurrentCell(baseCellProps: BaseCellProps) {
+    currentCell = baseCellProps;
+  }
 
   function validateCell(cells: CellProps[][], cellProps: CellProps, rowIndex: number, columnIndex: number, value: number): CellProps {
     if (cellProps.rowIndex !== rowIndex || cellProps.columnIndex !== columnIndex)
@@ -19,6 +23,14 @@ function App() {
     console.log('in cell value changed');
     var newCells = cells.map((row) => {
       return row.map((cell) => validateCell(cells, cell, rowIndex, columnIndex, value))
+    });
+    setCells(newCells);
+    setIsComplete(newCells.every(row => row.every(c => c.value !== 0 && c.isValid)));
+  }
+
+  function onValueChange(value: number) {
+    var newCells = cells.map((row) => {
+      return row.map((cell) => validateCell(cells, cell, currentCell.rowIndex, currentCell.columnIndex, value))
     });
     setCells(newCells);
     setIsComplete(newCells.every(row => row.every(c => c.value !== 0 && c.isValid)));
@@ -40,6 +52,7 @@ function App() {
 
   const [cells, setCells] = useState(initCells);
   const [isComplete, setIsComplete] = useState(false);
+  let currentCell: BaseCellProps = { rowIndex: 0, columnIndex: 0, value: cells[0][0].value };
 
   return (
     <div className="App">
@@ -51,7 +64,9 @@ function App() {
           cells.map((row, rowIndex) => {
             return row.map((cell, columnIndex) =>
               <Cell {...cell} key={`${rowIndex}${columnIndex}`}
-                onValueChange={onCellValueChange}></Cell>)
+                onValueChange={onCellValueChange}
+                onFocus={setCurrentCell}
+                onValueChangeV2={onValueChange}></Cell>)
           })
         }
       </div>

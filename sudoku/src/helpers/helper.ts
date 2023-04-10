@@ -7,25 +7,22 @@ export function getCellProps(initValues: number[]): CellProps[][] {
     var rowCounter = 0, columnCounter = 0;
     let rowArray: CellProps[] = [];
     for (var counter = 0; counter < 81; counter++) {
-        /*if (columnCounter === 0) {
-            initCells[rowCounter] = [];
-        }*/
-      rowArray.push({
-        rowIndex: rowCounter,
-        columnIndex: columnCounter,
-        value: initValues[counter],
-        disabled: initValues[counter] !== 0,
-        isValid: false
-      } as CellProps);
-      if (columnCounter === 8) {
-          columnCounter = 0;
-          initCells[rowCounter] = rowArray;
-          rowCounter++;
-          rowArray = [];
-      }
-      else {
-        columnCounter++;
-      }
+        rowArray.push({
+            rowIndex: rowCounter,
+            columnIndex: columnCounter,
+            value: initValues[counter],
+            disabled: initValues[counter] !== 0,
+            isValid: false
+        } as CellProps);
+        if (columnCounter === 8) {
+            columnCounter = 0;
+            initCells[rowCounter] = rowArray;
+            rowCounter++;
+            rowArray = [];
+        }
+        else {
+            columnCounter++;
+        }
     }
     console.log(initCells);
     return initCells;
@@ -43,8 +40,8 @@ export function validInSquare(cells: CellProps[][], rowIndex: number, columnInde
     const startingRow = getStartingRowOrColumn(rowIndex);
     const startingColumn = getStartingRowOrColumn(columnIndex);
     console.log(`startingRow: ${startingRow}, startingColumn: ${startingColumn}`);
-    for (var rowCounter = startingRow; rowCounter < startingRow + 3; rowCounter++){
-        for (var columnCounter = startingColumn; columnCounter < startingColumn + 3; columnCounter++){
+    for (var rowCounter = startingRow; rowCounter < startingRow + 3; rowCounter++) {
+        for (var columnCounter = startingColumn; columnCounter < startingColumn + 3; columnCounter++) {
             console.log(`number to consider: ${cells[rowCounter][columnCounter].value}`);
             if (cells[rowCounter][columnCounter].value === value) {
                 return false;
