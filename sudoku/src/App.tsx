@@ -9,28 +9,20 @@ function App() {
     currentCell = baseCellProps;
   }
 
-  function validateCell(cells: CellProps[][], cellProps: CellProps, rowIndex: number, columnIndex: number, value: number): CellProps {
-    if (cellProps.rowIndex !== rowIndex || cellProps.columnIndex !== columnIndex)
+  function validateCell(cells: CellProps[][], cellProps: CellProps, value: number): CellProps {
+    console.log(`current cell: ${JSON.stringify(currentCell)}`);
+    if (cellProps.rowIndex !== currentCell.rowIndex || cellProps.columnIndex !== currentCell.columnIndex)
       return cellProps;
-    cellProps.isValid = validInRow(cells, rowIndex, value)
-      && validInColumn(cells, columnIndex, value)
-      && validInSquare(cells, rowIndex, columnIndex, value);
+    cellProps.isValid = validInRow(cells, currentCell.rowIndex, value)
+      && validInColumn(cells, currentCell.columnIndex, value)
+      && validInSquare(cells, currentCell.rowIndex, currentCell.columnIndex, value);
     cellProps.value = value;
     return cellProps!;
   }
 
-  function onCellValueChange(rowIndex: number, columnIndex: number, value: number): void {
-    console.log('in cell value changed');
-    var newCells = cells.map((row) => {
-      return row.map((cell) => validateCell(cells, cell, rowIndex, columnIndex, value))
-    });
-    setCells(newCells);
-    setIsComplete(newCells.every(row => row.every(c => c.value !== 0 && c.isValid)));
-  }
-
   function onValueChange(value: number) {
     var newCells = cells.map((row) => {
-      return row.map((cell) => validateCell(cells, cell, currentCell.rowIndex, currentCell.columnIndex, value))
+      return row.map((cell) => validateCell(cells, cell, value))
     });
     setCells(newCells);
     setIsComplete(newCells.every(row => row.every(c => c.value !== 0 && c.isValid)));
@@ -64,9 +56,8 @@ function App() {
           cells.map((row, rowIndex) => {
             return row.map((cell, columnIndex) =>
               <Cell {...cell} key={`${rowIndex}${columnIndex}`}
-                onValueChange={onCellValueChange}
                 onFocus={setCurrentCell}
-                onValueChangeV2={onValueChange}></Cell>)
+                onValueChange={onValueChange}></Cell>)
           })
         }
       </div>

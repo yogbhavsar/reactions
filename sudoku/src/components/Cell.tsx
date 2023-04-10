@@ -9,9 +9,8 @@ export interface BaseCellProps {
 export interface CellProps extends BaseCellProps {
     disabled: boolean;
     isValid: boolean;
-    onValueChange: (rowIndex: number, columnIndex: number, value: number) => void;
+    onValueChange: (value: number) => void;
     onFocus: (cellProps: BaseCellProps) => void;
-    onValueChangeV2: (value: number) => void;
 }
 
 export default function Cell(props: CellProps) {
@@ -26,13 +25,13 @@ export default function Cell(props: CellProps) {
     function onNumberTextChange(event: React.ChangeEvent<HTMLInputElement>, rowIndex: number, columnIndex: number) {
         console.log(`event target value: ${event.target.value}`);
         setNumberText(event.target.value);
-        if (validKeys.some(k => event.target.value === k) && props.onValueChangeV2) {
+        if (validKeys.some(k => event.target.value === k) && props.onValueChange) {
             event.preventDefault();
             event.stopPropagation();
-            if (props.onValueChangeV2) {
+            if (props.onValueChange) {
                 const value = parseInt(event.target.value);
                 console.log(`value to pass: ${value}`);
-                props.onValueChangeV2(value);
+                props.onValueChange(value);
             }
         }
     }
