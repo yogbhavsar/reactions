@@ -10,11 +10,11 @@ export function Sudoku() {
     const [puzzle, setPuzzle] = useState<CellProps[][]>([]);
 
     useEffect(() => {
-            async function setInitialPuzzle(){
-                setPuzzle(await sudokuService.getNewPuzzle(DifficultyLevels.Easy));
-            }
-            setInitialPuzzle();
-        });
+        async function setInitialPuzzle() {
+            setPuzzle(await sudokuService.getNewPuzzle(DifficultyLevels.Easy));
+        }
+        setInitialPuzzle();
+    }, []);
 
     const onDifficultyLevelChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         setDifficultyLevel(e.target.value as DifficultyLevels);
@@ -32,13 +32,13 @@ export function Sudoku() {
             })
         );
         updatedPuzzle[rowIndex]![colIndex]!.isValid = true; // reset validity before validation
-        if(newValue == null) {
+        if (newValue == null) {
             //No need to check for validity of null value
             setPuzzle(updatedPuzzle);
         }
-        if (!sudokuService.isInputValid(puzzle, rowIndex, colIndex, newValue)) {
+        else if (!sudokuService.isInputValid(puzzle, rowIndex, colIndex, newValue)) {
             console.log(
-            `Value ${newValue} is not valid in row ${rowIndex}, column ${colIndex}, box (${Math.floor(rowIndex / 3)}, ${Math.floor(colIndex / 3)})`,
+                `Value ${newValue} is not valid in row ${rowIndex}, column ${colIndex}, box (${Math.floor(rowIndex / 3)}, ${Math.floor(colIndex / 3)})`,
             )
             updatedPuzzle[rowIndex]![colIndex]!.isValid = false
         }
@@ -52,9 +52,9 @@ export function Sudoku() {
     return (
         <>
             <p>
-            You know the basic Sudoku. If you see <span style={{ color: "red" }}>red</span> numbers, they are
-            invalid. If you see <span style={{ color: "white" }}>white</span> numbers, they are valid.
-            <span style={{ color: "var(--color-text)" }}>Default</span> numbers cannot be changed.
+                You know the basic Sudoku. If you see <span style={{ color: "red" }}>red</span> numbers, they are
+                invalid. If you see <span style={{ color: "white" }}>white</span> numbers, they are valid.
+                <span style={{ color: "var(--color-text)" }}>Default</span> numbers cannot be changed.
             </p>
             <br />
             <label htmlFor="difficulty">Difficulty Level: </label>
@@ -65,28 +65,28 @@ export function Sudoku() {
                 className="difficulty-levels"
                 title="This doesn't generate new puzzles as per the difficulty level. Keeping 'difficulty' here for demo purpose"
             >
-                { Object.values(DifficultyLevels).map((difficulty) => (
+                {Object.values(DifficultyLevels).map((difficulty) => (
                     <option key={difficulty} value={difficulty}>{difficulty}</option>
-                )) }
+                ))}
             </select>
             <br />
             <br />
             <div className="sudoku">
-                { puzzle.map((row, rowIndex) => 
-                        
-                            row.map((cell, cellIndex) => (
-                            <Cell 
-                                key={Math.random()} 
-                                value={cell.value} 
-                                cellKey={rowIndex + '-' + cellIndex} 
-                                isValid={cell.isValid} 
-                                isDefault={cell.isDefault} 
-                                rowIndex={cell.rowIndex} 
-                                colIndex={cell.colIndex} 
-                                handleValueChange={handleValueChange}
-                            />
-                        ))
-                    )
+                {puzzle.map((row, rowIndex) =>
+
+                    row.map((cell, cellIndex) => (
+                        <Cell
+                            key={Math.random()}
+                            value={cell.value}
+                            cellKey={rowIndex + '-' + cellIndex}
+                            isValid={cell.isValid}
+                            isDefault={cell.isDefault}
+                            rowIndex={cell.rowIndex}
+                            colIndex={cell.colIndex}
+                            handleValueChange={handleValueChange}
+                        />
+                    ))
+                )
                 }
             </div>
         </>
