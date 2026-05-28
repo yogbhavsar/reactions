@@ -44,7 +44,7 @@ export function Sudoku() {
         }
         updatedPuzzle[rowIndex]![colIndex]!.value = newValue
         setPuzzle(updatedPuzzle)
-        if (sudokuService.isPuzzleComplete(puzzle)) {
+        if (sudokuService.isPuzzleComplete(updatedPuzzle)) {
             alert('Congratulations! You have completed the puzzle!')
         }
     }
